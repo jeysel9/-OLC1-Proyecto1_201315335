@@ -1,0 +1,153 @@
+// ------------  Paquete e importaciones ------------
+package statPy; 
+
+import java_cup.runtime.*;
+
+
+//------> Codigo para el parser
+//------> Declaracion de variables, funciones y funciones de error
+
+parser code 
+{:
+    public String resultado = ""; 
+
+    public void syntax_error(Symbol s)
+    {
+            System.err.println("Error Sintactico: "+ s.value + " - Fila: " + s.right + " - Columna: " + s.left + ". Recuperado" );
+    }
+
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception
+    {
+            System.err.println("Error Sintactico: "+ s.value + " - Fila: " + s.right + " - Columna: " + s.left + ". Sin recuperacion." );
+    }
+
+:}
+ 
+
+//------> Codigo para las acciones gramaticales (no tocar)
+action code
+{:  :}
+
+
+//-------------------------> Declaración de terminales
+//--------------- EXPRESIONES
+terminal String ENTERO;
+terminal String DECIMAL;
+terminal String CADENA;
+terminal String CACRACTER;
+terminal String ID;
+//------------ SENTENCIAS Y RESERVADAS
+terminal String IF;
+terminal String ELSE;
+terminal String SWITCH;
+terminal String CASE;
+terminal String DEFAULT;
+terminal String BREAK;
+terminal String FOR;
+terminal String WHILE;
+terminal String DO;
+terminal String CONSOLE;
+terminal String WRITE;
+terminal String MAIN;
+terminal String VOID;
+terminal String DEFINIRGLOBALES;
+terminal String DEFINIRBARRAS;
+terminal String DEFINIRPIE;
+terminal String TITULO;
+terminal String TITULOX;
+terminal String TITULOY;
+terminal String VALORES;
+terminal String EJEX;
+//---------------TIPOS DE DATOS
+terminal String INT;
+terminal String DOUBLE;
+terminal String CHAR;
+terminal String BOOL;
+terminal String STRING;
+//----------SIMBOLOS ARITMETICOS
+terminal String SUMA ;
+terminal String RESTA;
+terminal String MULTIPLICACION;
+terminal String DIVISION;
+terminal String IGUAL;
+//----------SIMBOLOS RELACIONALES
+terminal String MENOR;
+terminal String MAYOR;
+terminal String MENORIGUAL;
+terminal String MAYORIGUAL;
+terminal String IGUALIGUAL;
+terminal String DIFERENTE;
+//----------SIMBOLOS LOGICOS
+terminal String AND;
+terminal String OR;
+terminal String NOT;
+//----------SIMBOLOS AGRUPACION
+terminal String LLAVEABIERTA;
+terminal String LLAVECERRADA;
+terminal String PARENTESISABIERTO;
+terminal String PARENTESISCERRADO;
+terminal String CORCHETEABIERTO;
+terminal String CORCHETECERRADO;
+//----------SIMBOLOS OTROS
+terminal String PUNTO;
+terminal String COMA;
+terminal String DOSPUNTOS;
+terminal String PUNTOCOMA;
+terminal String DOLAR;
+
+
+//---------------------------> Declaración de no terminales
+non terminal inicio;
+non terminal def_main;
+non terminal lista_instruccion;
+non terminal instruccion;
+non terminal def_estadistica;
+non terminal declaracion_Asignacion;
+non terminal if;
+non terminal switch;
+non terminal for;
+non terminal while;
+non terminal doWhile;
+non terminal imprimir;
+non terminal DefinirGlobales;
+non terminal GraficaBarras;
+non terminal GraficaPie;
+non terminal expresion;
+non terminal tipo_dato;
+non terminal casos;
+non terminal listaCasos;
+non terminal default;
+non terminal valor;
+non terminal break;
+non terminal incre_decre;
+non terminal def_estadisticas;
+non terminal lista_estadistica;
+non terminal tipo_estadistica;
+non terminal exp_estadistica;
+non terminal def_json;
+non terminal lista_ex_json;
+non terminal exp_json;
+non terminal reservada;
+non terminal Def_func_grafica;
+non terminal nombre_funcion;
+non terminal lista_grafica;
+non terminal grafica;
+non terminal def_graficas;
+non terminal lista_def_graficas;
+
+//---> precedencia 
+precedence left OR;
+precedence left AND;
+precedence right NOT;
+precedence left MAYOR, MENOR, MAYORIGUAL, MENORIGUAL, IGUAL, DIFERENTE;
+precedence left SUMA, RESTA;
+precedence left MULTIPLICACION, DIVISION;
+
+//------> Definir Simbolo Inicial
+start with inicio; 
+
+
+// ------------>  Producciones  <------------
+
+inicio ::= ENTERO
+;
