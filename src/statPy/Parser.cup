@@ -34,7 +34,7 @@ action code
 terminal String ENTERO;
 terminal String DECIMAL;
 terminal String CADENA;
-terminal String CACRACTER;
+terminal String CARACTER;
 terminal String ID;
 //------------ SENTENCIAS Y RESERVADAS
 terminal String IF;
@@ -46,18 +46,22 @@ terminal String BREAK;
 terminal String FOR;
 terminal String WHILE;
 terminal String DO;
+terminal String TRUE;
+terminal String FALSE;
 terminal String CONSOLE;
 terminal String WRITE;
 terminal String MAIN;
 terminal String VOID;
 terminal String DEFINIRGLOBALES;
-terminal String DEFINIRBARRAS;
-terminal String DEFINIRPIE;
+terminal String GRAFICABARRAS;
+terminal String GRAFICAPIE;
 terminal String TITULO;
 terminal String TITULOX;
 terminal String TITULOY;
 terminal String VALORES;
 terminal String EJEX;
+terminal String NEWVALOR;
+
 //---------------TIPOS DE DATOS
 terminal String INT;
 terminal String DOUBLE;
@@ -103,15 +107,13 @@ non terminal lista_instruccion;
 non terminal instruccion;
 non terminal def_estadistica;
 non terminal declaracion_Asignacion;
-non terminal if;
-non terminal switch;
-non terminal for;
-non terminal while;
-non terminal doWhile;
+non terminal def_if;
+non terminal def_switch;
+non terminal def_for;
+non terminal def_while;
+non terminal def_doWhile;
 non terminal imprimir;
-non terminal DefinirGlobales;
-non terminal GraficaBarras;
-non terminal GraficaPie;
+non terminal definirglobales;
 non terminal expresion;
 non terminal tipo_dato;
 non terminal casos;
@@ -128,7 +130,7 @@ non terminal def_json;
 non terminal lista_ex_json;
 non terminal exp_json;
 non terminal reservada;
-non terminal Def_func_grafica;
+non terminal def_func_grafica;
 non terminal nombre_funcion;
 non terminal lista_grafica;
 non terminal grafica;
@@ -139,7 +141,7 @@ non terminal lista_def_graficas;
 precedence left OR;
 precedence left AND;
 precedence right NOT;
-precedence left MAYOR, MENOR, MAYORIGUAL, MENORIGUAL, IGUAL, DIFERENTE;
+precedence left MAYOR, MENOR, MAYORIGUAL, MENORIGUAL, IGUALIGUAL, DIFERENTE;
 precedence left SUMA, RESTA;
 precedence left MULTIPLICACION, DIVISION;
 
@@ -149,5 +151,165 @@ start with inicio;
 
 // ------------>  Producciones  <------------
 
-inicio ::= ENTERO
+inicio ::= def_main
+;
+
+def_main ::= VOID MAIN PARENTESISABIERTO PARENTESISCERRADO LLAVEABIERTA lista_instruccion LLAVECERRADA
+;
+
+lista_instruccion ::= instruccion lista_instruccion 
+                   | def_estadistica lista_instruccion
+                   | instruccion 
+                   | def_estadistica 
+;
+
+instruccion ::= declaracion_Asignacion
+             | def_if
+             | def_switch
+             | def_for
+             | def_while
+             | def_doWhile
+             | imprimir
+;
+
+def_estadistica ::= definirglobales
+                 | def_func_grafica
+;
+
+imprimir ::= CONSOLE PUNTO WRITE PARENTESISABIERTO expresion PARENTESISCERRADO PUNTOCOMA
+;
+
+declaracion_Asignacion ::= tipo_dato ID PUNTOCOMA
+                      | tipo_dato ID IGUAL expresion PUNTOCOMA
+;
+
+def_if ::= IF PARENTESISABIERTO expresion PARENTESISCERRADO LLAVEABIERTA lista_instruccion LLAVECERRADA 
+        | IF PARENTESISABIERTO expresion PARENTESISCERRADO LLAVEABIERTA lista_instruccion LLAVECERRADA  ELSE LLAVEABIERTA lista_instruccion LLAVECERRADA 
+        | IF PARENTESISABIERTO expresion PARENTESISCERRADO LLAVEABIERTA lista_instruccion LLAVECERRADA  ELSE def_if 
+;
+
+def_switch ::= SWITCH PARENTESISABIERTO expresion PARENTESISCERRADO LLAVEABIERTA casos LLAVECERRADA 
+;
+
+casos ::= listaCasos 
+        | default 
+;
+
+
+listaCasos ::= CASE valor DOSPUNTOS lista_instruccion break 
+;
+
+default ::= DEFAULT DOSPUNTOS lista_instruccion break 
+          ;
+
+break ::= BREAK PUNTOCOMA
+        |
+;
+
+valor ::= ENTERO	
+        | DECIMAL
+        | ID
+        | CARACTER
+;
+
+def_for ::= FOR PARENTESISABIERTO declaracion_Asignacion PUNTOCOMA expresion PUNTOCOMA incre_decre PARENTESISCERRADO LLAVEABIERTA lista_instruccion LLAVECERRADA
+;
+
+incre_decre ::= ID SUMA SUMA
+             | ID RESTA RESTA	
+;
+
+def_while ::= WHILE PARENTESISABIERTO expresion PARENTESISCERRADO LLAVEABIERTA lista_instruccion LLAVECERRADA 
+;
+
+def_doWhile ::= DO LLAVEABIERTA lista_instruccion LLAVECERRADA WHILE PARENTESISABIERTO expresion PARENTESISCERRADO PUNTOCOMA
+;
+
+expresion ::= expresion SUMA expresion
+           | expresion RESTA expresion
+           | expresion MULTIPLICACION expresion
+           | expresion DIVISION expresion
+           | expresion MENOR expresion
+           | expresion MAYOR expresion
+           | expresion MENORIGUAL expresion
+           | expresion MAYORIGUAL expresion
+           | expresion IGUALIGUAL expresion
+           | expresion DIFERENTE expresion
+           | expresion AND expresion
+           | expresion OR expresion
+           | NOT expresion
+           | ENTERO
+           | CADENA
+           | ID
+           | DECIMAL
+           | CARACTER
+           | TRUE
+           | FALSE
+;
+
+tipo_dato ::= INT
+           | DOUBLE	
+           | STRING	
+           | CHAR
+           | BOOL
+;
+
+definirglobales ::= VOID DEFINIRGLOBALES PARENTESISABIERTO PARENTESISCERRADO LLAVEABIERTA def_estadisticas LLAVECERRADA
+;
+def_estadisticas ::= def_estadisticas lista_estadistica
+                    |lista_estadistica
+;			  
+lista_estadistica ::= tipo_estadistica ID IGUAL exp_estadistica PUNTOCOMA
+		     |tipo_estadistica ID IGUAL def_json PUNTOCOMA
+;
+
+tipo_estadistica ::= DOUBLE
+                  | STRING
+;
+
+exp_estadistica ::= CADENA
+                 | ID
+                 | DECIMAL
+                 | CARACTER
+;
+	
+def_json ::= DOLAR LLAVEABIERTA NEWVALOR COMA lista_ex_json LLAVECERRADA
+;
+
+lista_ex_json ::= lista_ex_json COMA exp_json
+               | exp_json
+;
+
+exp_json ::= CADENA
+           | ID
+;
+
+reservada ::= TITULO
+           | TITULOX
+           | TITULOY
+           | VALORES
+           | EJEX
+;
+
+def_func_grafica ::= VOID nombre_funcion PARENTESISABIERTO PARENTESISCERRADO LLAVEABIERTA lista_grafica LLAVECERRADA
+;
+
+nombre_funcion ::= GRAFICABARRAS
+                | GRAFICAPIE
+; 
+
+lista_grafica ::= lista_grafica grafica
+               | grafica
+;		
+
+grafica ::= tipo_estadistica reservada IGUAL exp_estadistica PUNTOCOMA
+         | tipo_estadistica CORCHETEABIERTO CORCHETECERRADO reservada IGUAL LLAVEABIERTA def_graficas LLAVECERRADA PUNTOCOMA
+;			 
+def_graficas ::= def_graficas COMA lista_def_graficas
+              | lista_def_graficas			   
+              | 
+;
+
+lista_def_graficas ::= exp_estadistica
+                    | def_json
 ;
